@@ -9,6 +9,8 @@ import android.widget.MultiAutoCompleteTextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int WORDS_GROUP_SIZE = 4;
+
     private EditText textInputView;
     private MultiAutoCompleteTextView textOutputView;
 
@@ -24,26 +26,24 @@ public class MainActivity extends AppCompatActivity {
         splitButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                split();
+                convertInput();
             }
         });
     }
 
-    private void split() {
+    private void convertInput() {
         StringBuilder builder = new StringBuilder();
         String[] words = textInputView.getText().toString().split("\\s+");
-
-        if (words.length == 0) {
-            textOutputView.setText("");
-            return;
-        }
 
         for (int i = 0; i < words.length; i++) {
             builder.append(words[i]);
 
-            if (((i + 1) % 4 == 0) && (i < words.length - 1)) {
+            boolean isLastWordInGroup = (i + 1) % WORDS_GROUP_SIZE == 0;
+            boolean isNotLastWord = i < words.length - 1;
+
+            if (isLastWordInGroup && isNotLastWord) {
                 builder.append(System.lineSeparator());
-            } else if (i < words.length - 1) {
+            } else if (isNotLastWord) {
                 builder.append(' ');
             }
         }
